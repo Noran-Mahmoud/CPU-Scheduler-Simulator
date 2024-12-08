@@ -1,0 +1,5 @@
+4
+process1 red 0 17 4 4
+process2 green 3 6 9 3
+process3 blue 4 10 3 5
+process4 yellow 29 4 10 2
