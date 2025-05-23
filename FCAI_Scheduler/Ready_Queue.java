@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -12,11 +13,21 @@ class MyComparator implements Comparator<process> {
 }
 
 class process_data{
+    int id;
+    String name;
+    Color color;
+    int burstTime;
     int turnaroundTime;
     int waitingTime;
-    process_data(int t, int w){
+    ArrayList<ExecutionSegment> timeline;
+    process_data(int ID, String n,Color c, int b, int t, int w, ArrayList<ExecutionSegment> e){
+        id = ID;
+        name = n;
+        color = c;
+        burstTime = b;
         turnaroundTime = t;
         waitingTime = w;
+        timeline = e;
     }
 }
 
@@ -41,7 +52,7 @@ public class Ready_Queue {
         }
 
         try {
-            CPU.enterCPU(p.getMonitor(), p.getID());
+            CPU.enterCPU(p.getMonitor());
             p.executeProcess();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -71,10 +82,10 @@ public class Ready_Queue {
             monitor = processMonitors.get(newProcess);
         }
         
-        CPU.leaveCPU(monitor, newProcess.getID());
+        CPU.leaveCPU(monitor);
         if(newProcess != p){
             try {
-                CPU.enterCPU(p.getMonitor(), p.getID());
+                CPU.enterCPU(p.getMonitor());
                 p.executeProcess();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -110,10 +121,10 @@ public class Ready_Queue {
             monitor = processMonitors.get(newProcess);
         }
 
-        CPU.leaveCPU(monitor, newProcess.getID());
+        CPU.leaveCPU(monitor);
         if(newProcess != p){
             try {
-                CPU.enterCPU(p.getMonitor(), p.getID());
+                CPU.enterCPU(p.getMonitor());
                 p.executeProcess();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -125,7 +136,8 @@ public class Ready_Queue {
     public void leaveReadyQueue(process p){
         Object monitor;
         process newProcess;
-        data.add(new process_data(p.getTurnaround(), p.getWaitingTime()));
+        data.add(new process_data(p.getID(), p.getname(), p.getColor(), p.getinitBurstTime(),
+                p.getTurnaround(), p.getWaitingTime(), p.getTimeLine()));
         synchronized(QueueByFactor){
             QueueByFactor.remove(p);
         }
@@ -142,7 +154,7 @@ public class Ready_Queue {
             else monitor = null;
         }
         if(monitor != null){
-            CPU.leaveCPU(monitor, newProcess.getID());
+            CPU.leaveCPU(monitor);
         }
     }
 
