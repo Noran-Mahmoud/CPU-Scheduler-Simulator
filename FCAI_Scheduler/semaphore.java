@@ -6,7 +6,7 @@ public class semaphore {
         value = initial;
     }
 
-    public void enterCPU(Object monitor, int id) throws InterruptedException {
+    public void enterCPU(Object monitor) throws InterruptedException {
         if(value <= 0){
             synchronized(monitor){
                 monitor.wait();
@@ -19,7 +19,7 @@ public class semaphore {
         }
     }
 
-    public void leaveCPU(Object monitor, int id){
+    public void leaveCPU(Object monitor){
         if (monitor != null && value == 0) {
             synchronized(monitor){
                 monitor.notify();
